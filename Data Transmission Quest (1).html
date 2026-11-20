@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Data Transmission Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--fg:#3c3c3c;--mut:#777;--line:#e5e5e5;--green:#58cc02;--gd:#46a302;--red:#ff4b4b;--rd:#ea2b2b;--blue:#1cb0f6;--bd:#1899d6;--gold:#ffc800;--okbg:#d7ffb8;--badbg:#ffdfe0;--card:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131f24;--fg:#f1f7fb;--mut:#8aa0ab;--line:#37464f;--okbg:#1d3a12;--badbg:#3d1a1d;--card:#1a2a31}}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Nunito,system-ui,sans-serif;font-weight:700}
+*{box-sizing:border-box}
+#app{max-width:560px;margin:0 auto;padding:16px;min-height:100vh}
+.top{display:flex;gap:14px;justify-content:flex-end;font-weight:900;margin-bottom:8px}
+h1{font-size:28px;font-weight:900;margin:8px 0 4px}
+p.sub{color:var(--mut);margin:0 0 20px}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px}
+.unit{width:100%;border-radius:16px;padding:16px;color:#fff;margin-top:14px;text-align:left}
+.unit h2{margin:0;font-size:20px;font-weight:900}.unit span{opacity:.9;font-size:14px}
+.node{width:84px;height:76px;border-radius:50%;border:0;color:#fff;font-size:34px;cursor:pointer;margin:14px 0 4px;font-family:inherit}
+.node:active{transform:translateY(4px);box-shadow:none!important}
+.stars{font-size:18px;letter-spacing:2px;min-height:24px}
+.lbl{font-weight:900;margin-bottom:6px}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:14px;font:900 16px Nunito,sans-serif;color:#fff;background:var(--green);box-shadow:0 4px 0 var(--gd);cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
+.btn:active{transform:translateY(4px);box-shadow:none}
+.btn:disabled{background:var(--line);box-shadow:none;color:var(--mut);cursor:default}
+.btn.bad{background:var(--red);box-shadow:0 4px 0 var(--rd)}
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.x{background:none;border:0;font-size:26px;color:var(--mut);cursor:pointer}
+.track{flex:1;height:16px;background:var(--line);border-radius:9px;overflow:hidden}
+.fill{height:100%;background:var(--green);border-radius:9px;transition:width .3s}
+.q{font-size:22px;font-weight:900;margin:0 0 20px;line-height:1.3}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--fg);border:2px solid var(--line);border-bottom-width:4px;border-radius:14px;padding:14px 16px;margin-bottom:10px;font:800 16px Nunito,sans-serif;cursor:pointer}
+.opt.sel{border-color:var(--blue);background:rgba(28,176,246,.12);color:var(--blue)}
+.opt:focus-visible,.btn:focus-visible,.node:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.foot{position:sticky;bottom:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));margin:24px -16px -16px;border-top:2px solid var(--line);background:var(--bg)}
+.foot.ok{background:var(--okbg);color:#46a302}.foot.no{background:var(--badbg);color:var(--red)}
+.foot b{display:block;font-size:20px;margin-bottom:4px}.foot div{color:var(--fg);font-size:15px;margin-bottom:12px;font-weight:700}
+.done{text-align:center;padding-top:40px}.done .big{font-size:80px}
+.chips{display:flex;gap:10px;justify-content:center;margin:20px 0}
+.chip{border:2px solid var(--line);border-radius:14px;padding:10px 16px;font-weight:900}
+.chip small{display:block;color:var(--mut)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var U=[
+{id:"enc",t:"Encryption",d:"Keys, ciphers and secure sending",c:"#58cc02",s:"#46a302",i:"🔐",q:[
+["Which of the following is true about encryption?",["It prevents unauthorised people from understanding the message.","It makes the message shorter.","It stops the message being sent.","It checks the message for errors."],0,"Encryption turns plaintext into ciphertext so unauthorised people can’t understand it."],
+["In asymmetric encryption, if a hacker discovered the ____, they could read the encrypted message.",["private key","public key","algorithm","ciphertext"],0,"Only the private key decrypts. The public key is shared openly."],
+["Both ____ and ____ encryption are used for SSL and TLS.",["symmetric and asymmetric","symmetric and Caesar","asymmetric and parity","Caesar and parity"],0,"SSL/TLS use asymmetric to swap keys, then symmetric for the bulk data."],
+["A company emails a contract to a new employee. Which encryption keeps it highly secured?",["Asymmetric","Symmetric"],0,"Asymmetric is more secure: two different keys encrypt and decrypt."],
+["Moustafa wants to send his project to Lilian using a simple, fast method. Which should he use?",["Symmetric","Asymmetric"],0,"Symmetric is easier and faster: one secret key does both jobs."],
+["Which is NOT one of the asymmetric encryption steps?",["Both sender and receiver exchange the same key.","The receiver generates a public and a private key.","The sender encrypts with the receiver’s public key.","The receiver decrypts with its private key."],0,"Sharing the same key is symmetric encryption."],
+["Which is NOT one of the symmetric encryption steps?",["The sender replaces each letter with another one from the alphabet.","Both sides exchange the same secret key.","The sender encrypts with the secret key.","The receiver decrypts with the secret key."],0,"Replacing letters is an example of an algorithm (a cipher), not a step of the method."],
+["Name the simple algorithm that replaces each character with another one from the alphabet.",["Caesar cipher","Check digit","Echo check","Checksum"],0,"The Caesar cipher shifts every letter along the alphabet."],
+["Which item is NOT needed to perform the encryption process?",["Ciphertext","Plaintext","An algorithm","An encryption key"],0,"Ciphertext is the result. You need plaintext, an algorithm and a key."],
+["Using the same key to encrypt and decrypt creates a problem called ____.",["key distribution","key frames","parity","interference"],0,"A copy of the secret key must be sent to the receiver safely."],
+["____ is the protocol that transmits encrypted data between a web browser and a website.",["HTTPS","USB","ARQ","HTML"],0,"HTTPS = HTTP over TLS/SSL."]]},
+{id:"err",t:"Error detection",d:"Echo, parity, check digits, ARQ",c:"#1cb0f6",s:"#1899d6",i:"🛠️",q:[
+["Errors in data transmission happen because of ____ (data loss, gain or change).",["interference","encryption","key distribution","a parity bit"],0,"Interference can lose, add or change data."],
+["What is the main purpose of an error detection method?",["Maintain the accuracy of the data.","Make data transmit faster.","Hide data from hackers.","Compress the data."],0,"They detect errors that occur during transmission."],
+["Which method says: ‘if the two sets of data differ, we can’t know if the error happened on the way there or back’?",["Echo check","Checksum","Parity check","ARQ"],0,"Data may have arrived fine but been corrupted on the return trip."],
+["The error check is done at the ____ side for echo check, and at the ____ side for checksum.",["sender, receiver","receiver, sender","sender, sender","receiver, receiver"],0,"Echo: sender compares the echo. Checksum: receiver recalculates it."],
+["Which is NOT used to detect errors in data transmission?",["Check digit","Checksum","Parity check","ARQ"],0,"A check digit validates data on entry."],
+["Which ARQ step is incorrect?",["The receiving computer recalculates the checksum value.","A request is sent with data requiring acknowledgement.","No acknowledgement before timeout means the data is resent.","An error triggers an automatic resend request."],0,"ARQ uses acknowledgements and timeouts, not a checksum recalculation."],
+["Which method uses a system of acknowledgements and timeouts?",["Automatic Repeat Query (ARQ)","Echo check","Parity check","Check digit"],0,"ARQ resends until error-free, a limit is reached or it’s acknowledged."],
+["In ARQ, a ____ acknowledgement means data arrived; a ____ one means it didn’t.",["positive, negative","negative, positive","timeout, positive","parity, checksum"],0,"Positive = received OK. Negative = not received."],
+["Two uses of check digits are an ____ identifying a book and a ____ identifying a supermarket item.",["ISBN, barcode","USB, port","HTTPS, SSL","MAC, IP"],0,"ISBNs and barcodes both carry check digits."],
+["Check digit: 2 3 5 1 4 8. Multiply from right to left by position 1, 2, 3…, add, divide by 11. Is it valid?",["Valid (total 66, remainder 0)","Invalid (total 65)","Invalid (remainder 1)","Valid (total 55)"],0,"8×1+4×2+1×3+5×4+3×5+2×6 = 66. 66 ÷ 11 leaves 0."],
+["Using odd parity, what is the parity bit for 1000101?",["0","1"],0,"1000101 has three 1s (odd already), so add 0."],
+["Odd parity is used. Which byte was transmitted incorrectly?",["01001011","11000001","01000000","01001100"],0,"01001011 has four 1s (even). Odd parity needs an odd count."],
+["Even parity is used. Which byte was transmitted incorrectly?",["01001001","11001001","01001000","01001110"],0,"01001001 has three 1s (odd). Even parity needs an even count."]]},
+{id:"mod",t:"Modes and USB",d:"Simplex, duplex and USB",c:"#ce82ff",s:"#a568cc",i:"🔌",q:[
+["Using ____ transmission, data is sent one way only.",["simplex","half-duplex","full-duplex","parity"],0,"Simplex goes in one direction only."],
+["Which best describes half-duplex?",["Both directions, but one direction at a time.","One direction only.","Both directions at the same time.","No direction at all."],0,"Think walkie-talkie."],
+["Using ____, data packets can travel in both directions at the same time.",["full-duplex","simplex","half-duplex","ARQ"],0,"Full-duplex is like a phone call."],
+["What is USB short for?",["Universal Serial Bus","Unified Secure Byte","Universal Signal Buffer","User Serial Block"],0,"Universal Serial Bus."],
+["To transmit data from a flash drive to a computer, plug it into the computer’s USB ____.",["port","key","digit","cipher"],0,"A USB flash drive connects via a USB port."]]}];
+var S={xp:0,done:{},best:{}};
+try{var z=JSON.parse(localStorage.getItem("dtq")||"null");if(z)S=z}catch(e){}
+function save(){try{localStorage.setItem("dtq",JSON.stringify(S))}catch(e){}}
+function sh(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+var app=document.getElementById("app"),L=null;
+function home(){
+var h='<div class="top"><span>⭐ '+S.xp+' XP</span><span>🏆 '+Object.keys(S.done).length+'/'+U.length+'</span></div><h1>Data Transmission Quest</h1><p class="sub">Computer Science, Topic 2. Finish each unit to earn stars.</p><div class="path">';
+U.forEach(function(u,i){var b=S.best[u.id]||0;
+h+='<div class="unit" style="background:'+u.c+'"><h2>'+u.t+'</h2><span>'+u.d+' ('+u.q.length+' questions)</span></div><button class="node" aria-label="Start '+u.t+'" style="background:'+u.c+';box-shadow:0 6px 0 '+u.s+'" onclick="start('+i+')">'+u.i+'</button><div class="stars">'+(b>=3?"⭐⭐⭐":b==2?"⭐⭐":b==1?"⭐":"")+'</div>';});
+h+='</div>';app.innerHTML=h}
+function start(i){var u=U[i];L={u:i,queue:sh(u.q.map(function(_,k){return k})),total:u.q.length,solved:0,hearts:5,sel:null,checked:false,order:null,right:0,miss:0};show()}
+function show(){
+var u=U[L.u];if(!L.queue.length){return finish()}
+var k=L.queue[0],q=u.q[k];if(!L.order)L.order=sh(q[1].map(function(_,x){return x}));
+var h='<div class="bar"><button class="x" aria-label="Quit" onclick="home()">✕</button><div class="track"><div class="fill" style="width:'+(L.solved/L.total*100)+'%"></div></div><span style="color:var(--red);font-weight:900">❤️ '+L.hearts+'</span></div><p class="q">'+q[0]+'</p>';
+L.order.forEach(function(o){var c=L.sel===o?" sel":"";h+='<button class="opt'+c+'" '+(L.checked?"disabled":"")+' onclick="pick('+o+')">'+q[1][o]+'</button>'});
+if(L.checked){var ok=L.sel===q[2];h+='<div class="foot '+(ok?"ok":"no")+'"><b>'+(ok?"Nice! Correct":"Not quite")+'</b><div>'+(ok?"":"Answer: "+q[1][q[2]]+". ")+q[3]+'</div><button class="btn '+(ok?"":"bad")+'" onclick="next()">Continue</button></div>'}
+else h+='<div class="foot"><button class="btn" id="chk" '+(L.sel===null?"disabled":"")+' onclick="check()">Check</button></div>';
+app.innerHTML=h}
+function pick(o){if(L.checked)return;L.sel=o;show()}
+function check(){var k=L.queue[0],q=U[L.u].q[k];L.checked=true;if(L.sel===q[2]){L.right++;S.xp+=10}else{L.miss++;L.hearts--}show()}
+function next(){var k=L.queue.shift();if(L.sel===U[L.u].q[k][2])L.solved++;else L.queue.push(k);
+if(L.hearts<=0){return fail()}L.sel=null;L.checked=false;L.order=null;show()}
+function fail(){app.innerHTML='<div class="done"><div class="big">💔</div><h1>Out of hearts</h1><p class="sub">Review the explanations and try again. Wrong answers come back until you get them.</p><button class="btn" onclick="start('+L.u+')">Try again</button><br><button class="btn" style="background:var(--blue);box-shadow:0 4px 0 var(--bd)" onclick="home()">Back to path</button></div>'}
+function finish(){var u=U[L.u],st=L.miss===0?3:L.miss<=3?2:1;S.done[u.id]=1;S.best[u.id]=Math.max(S.best[u.id]||0,st);S.xp+=20;save();
+app.innerHTML='<div class="done"><div class="big">🎉</div><h1>Unit complete!</h1><div class="stars" style="font-size:36px">'+"⭐".repeat(st)+'</div><div class="chips"><div class="chip">'+(L.right*10+20)+'<small>XP earned</small></div><div class="chip">'+L.miss+'<small>Mistakes</small></div></div><button class="btn" onclick="home()">Continue</button></div>'}
+home();
+</script>
+</body>
+</html>
